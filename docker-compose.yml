@@ -1,0 +1,21 @@
+version: '2'
+
+services:
+  messaging-api:
+    build: ./messaging-service
+    container_name: 'messaging-api'
+    ports:
+      - 5001:80 
+    depends_on:
+      - messaging-db
+  messaging-db:
+    image: mongo
+    container_name: 'messaging-db'
+    environment:
+    - PUID=1000
+    - PGID=1000
+    volumes:
+    - /home/barry/mongodb/database:/data/db
+    ports:
+    - 27017:27017
+    restart: unless-stopped
