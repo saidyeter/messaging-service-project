@@ -1,17 +1,13 @@
-using MessagingService.MongoDB.Collection;
+using MessagingService.Api.Filters;
+using MessagingService.Api.Services;
+using MessagingService.DataAccess.Collection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MessagingService.Api
 {
@@ -24,7 +20,6 @@ namespace MessagingService.Api
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
 
@@ -32,15 +27,19 @@ namespace MessagingService.Api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MessagingService.Api", Version = "v1" });
+
+                var filePath = System.IO.Path.Combine(System.AppContext.BaseDirectory, "MessagingService.Api.xml");
+                c.IncludeXmlComments(filePath);
             });
             ;
             services.AddScoped<IMongoClient>(x => new MongoClient(connectionString: Configuration.GetConnectionString("MongoDB")));
 
-            services.AddScoped<IUserCollection, UserCollection>();
-            services.AddScoped<IMessageCollection, MessageCollection>(); 
+            services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddScoped<IPasswordService, PasswordService>();
+            services.AddScoped<IJwtService, JwtService>(); 
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -57,7 +56,7 @@ namespace MessagingService.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            }); 
+            });
         }
     }
 }

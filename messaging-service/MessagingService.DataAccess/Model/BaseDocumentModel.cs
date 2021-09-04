@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using System;
 
-namespace MessagingService.MongoDB.Model
+namespace MessagingService.DataAccess.Model
 {
     public abstract class BaseDocumentModel
     {
