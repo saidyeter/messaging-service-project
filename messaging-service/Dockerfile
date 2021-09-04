@@ -9,7 +9,7 @@ FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
    
 COPY ./MessagingService.Api/MessagingService.Api.csproj ./MessagingService.Api/
-COPY ./MessagingService.MongoDB/MessagingService.MongoDB.csproj ./MessagingService.MongoDB/
+COPY ./MessagingService.DataAccess/MessagingService.DataAccess.csproj ./MessagingService.DataAccess/
 RUN dotnet restore ./MessagingService.Api/MessagingService.Api.csproj
 
 COPY . .

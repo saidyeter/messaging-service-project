@@ -1,4 +1,4 @@
-﻿namespace MessagingService.MongoDB.Model
+﻿namespace MessagingService.DataAccess.Model
 {
     public class MessageModel : BaseDocumentModel
     {

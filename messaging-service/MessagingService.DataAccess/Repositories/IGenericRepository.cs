@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace MessagingService.MongoDB.Collection
+namespace MessagingService.DataAccess.Collection
 {
-    public interface IDocumentCollection<TModel>
+    public interface IGenericRepository<TModel>
     {
         List<TModel> GetList();
 

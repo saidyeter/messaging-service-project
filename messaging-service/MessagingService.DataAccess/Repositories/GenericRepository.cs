@@ -1,4 +1,4 @@
-﻿using MessagingService.MongoDB.Model;
+﻿using MessagingService.DataAccess.Model;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace MessagingService.MongoDB.Collection
+namespace MessagingService.DataAccess.Collection
 {
-    public abstract class BaseDocumentCollection<TModel> : IDocumentCollection<TModel>
+    public abstract class GenericRepository<TModel> : IGenericRepository<TModel>
         where TModel : BaseDocumentModel
     {
         protected readonly IMongoCollection<TModel> mongoCollection;
@@ -16,7 +16,7 @@ namespace MessagingService.MongoDB.Collection
         protected readonly IMongoClient _mongoClient;
         protected readonly IMongoDatabase mongoDatabase;
 
-        public BaseDocumentCollection(IMongoClient mongoClient, string dbName, string collectionName)
+        public GenericRepository(IMongoClient mongoClient, string dbName, string collectionName)
         {
             _mongoClient = mongoClient;
             mongoDatabase = _mongoClient.GetDatabase(dbName);
