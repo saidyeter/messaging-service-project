@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessagingService.Api", "MessagingService.Api\MessagingService.Api.csproj", "{94F774E6-D675-4229-B1A5-C1DBB535C5D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessagingService.DataAccess", "MessagingService.DataAccess\MessagingService.DataAccess.csproj", "{4019B17C-E2F1-4033-8BED-72E715588EE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessagingService.DataAccess", "MessagingService.DataAccess\MessagingService.DataAccess.csproj", "{4019B17C-E2F1-4033-8BED-72E715588EE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessagingService.Logging", "MessagingService.Logging\MessagingService.Logging.csproj", "{5CE0A20F-E81B-4ADA-8E00-AFF1490617F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{4019B17C-E2F1-4033-8BED-72E715588EE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4019B17C-E2F1-4033-8BED-72E715588EE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4019B17C-E2F1-4033-8BED-72E715588EE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CE0A20F-E81B-4ADA-8E00-AFF1490617F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CE0A20F-E81B-4ADA-8E00-AFF1490617F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CE0A20F-E81B-4ADA-8E00-AFF1490617F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CE0A20F-E81B-4ADA-8E00-AFF1490617F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

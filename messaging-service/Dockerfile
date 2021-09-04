@@ -10,6 +10,7 @@ WORKDIR /src
    
 COPY ./MessagingService.Api/MessagingService.Api.csproj ./MessagingService.Api/
 COPY ./MessagingService.DataAccess/MessagingService.DataAccess.csproj ./MessagingService.DataAccess/
+COPY ./MessagingService.Logging/MessagingService.Logging.csproj ./MessagingService.Logging/
 RUN dotnet restore ./MessagingService.Api/MessagingService.Api.csproj
 
 COPY . .
