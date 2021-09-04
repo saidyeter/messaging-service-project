@@ -1,6 +1,7 @@
 ﻿using MessagingService.Api.Models.Auth;
 using MessagingService.Api.Services;
 using MessagingService.DataAccess.Collection;
+using MessagingService.Logging;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -15,12 +16,14 @@ namespace MessagingService.Api.Controllers
         private readonly IPasswordService passwordService;
         private readonly IAccountRepository accountRepository;
         private readonly IJwtService jwtService;
+        private readonly ILogger logger;
 
-        public AuthController(IPasswordService passwordService, IAccountRepository accountRepository, IJwtService jwtService)
+        public AuthController(IPasswordService passwordService, IAccountRepository accountRepository, IJwtService jwtService, ILogger logger)
         {
             this.passwordService = passwordService;
             this.accountRepository = accountRepository;
             this.jwtService = jwtService;
+            this.logger = logger;
         }
 
 
@@ -32,6 +35,7 @@ namespace MessagingService.Api.Controllers
             var validationResult = request.IsValid();
             if (validationResult.Key == false)
             {
+                logger.Error($"Invalid Login Request : {string.Join(',', validationResult.Value)}. Request : '{System.Text.Json.JsonSerializer.Serialize(request)}'");
                 return BadRequest(new
                 {
                     errors = new string[]
@@ -46,6 +50,7 @@ namespace MessagingService.Api.Controllers
                 var account = accountRepository.GetSingleOrDefault(x => x.UserName == request.UserName);
                 if (account is null)
                 {
+                    logger.Error($"Account doesn't exist. Request : '{System.Text.Json.JsonSerializer.Serialize(request)}'");
                     return BadRequest(new
                     {
                         errors = new string[]
@@ -58,6 +63,7 @@ namespace MessagingService.Api.Controllers
                 var hashedPassword = passwordService.HashText(request.Password, Convert.FromBase64String(account.PasswordSalt));
                 if (hashedPassword != account.PasswordHash)
                 {
+                    logger.Error($"Invalid password. Request : '{System.Text.Json.JsonSerializer.Serialize(request)}'");
                     return BadRequest(new
                     {
                         errors = new string[]
@@ -73,6 +79,8 @@ namespace MessagingService.Api.Controllers
 
                 var token = jwtService.CreateToken(claims);
 
+                logger.Info($"Login Succeed for '{account.UserName}'. Request : '{System.Text.Json.JsonSerializer.Serialize(request)}'");
+
                 return Ok(new LoginResult
                 {
                     AccessToken = token,
@@ -81,11 +89,12 @@ namespace MessagingService.Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error($"Unexpected error on Login. Request : '{System.Text.Json.JsonSerializer.Serialize(request)}'", ex);
                 return BadRequest(new
                 {
                     errors = new string[]
                     {
-                        $"Critical unexpected error.({ex.Message})"
+                        "The username or password is incorrect."
                     }
                 });
             }
@@ -99,6 +108,7 @@ namespace MessagingService.Api.Controllers
             var validationResult = request.IsValid();
             if (validationResult.Key == false)
             {
+                logger.Error($"Invalid Register Request : {string.Join(',', validationResult.Value)}. Request : '{System.Text.Json.JsonSerializer.Serialize(request)}'");
                 return BadRequest(new
                 {
                     errors = validationResult.Value
@@ -119,15 +129,17 @@ namespace MessagingService.Api.Controllers
                     UserName = request.UserName
                 });
 
-                return CreatedAtAction(nameof(Register), new { id = account.Id }, account);
+                logger.Info($"Register Succeed for '{account.UserName}'. Request : '{System.Text.Json.JsonSerializer.Serialize(request)}'");
+                return CreatedAtAction(nameof(Register), new { id = account.Id });
             }
             catch (Exception ex)
             {
+                logger.Error($"Unexpected error on Register. Request : '{System.Text.Json.JsonSerializer.Serialize(request)}'", ex);
                 return BadRequest(new
                 {
                     errors = new string[]
                     {
-                        $"Critical unexpected error.({ex.Message})"
+                        "Unable to process Request. Please contact to Admin."
                     }
                 });
             }

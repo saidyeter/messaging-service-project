@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MessagingService.DataAccess\MessagingService.DataAccess.csproj" />
+    <ProjectReference Include="..\MessagingService.Logging\MessagingService.Logging.csproj" />
   </ItemGroup>
 
 </Project>
