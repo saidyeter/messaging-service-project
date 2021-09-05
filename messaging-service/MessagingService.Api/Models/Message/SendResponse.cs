@@ -1,6 +1,6 @@
 ﻿namespace MessagingService.Api.Models.Message
 {
-    public class SendResult
+    public class SendResponse
     {
         public string MessageId { get; set; }
         public string ReceiverUser { get; set; }

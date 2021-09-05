@@ -1,6 +1,8 @@
-﻿using MessagingService.Api.Models.Auth;
+﻿using MessagingService.Api.Helpers;
+using MessagingService.Api.Models.Auth;
+using MessagingService.Api.Models.Common;
 using MessagingService.Api.Services;
-using MessagingService.DataAccess.Collection;
+using MessagingService.DataAccess.Repositories;
 using MessagingService.Logging;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -9,6 +11,7 @@ using System.Net;
 
 namespace MessagingService.Api.Controllers
 {
+    [Produces("application/json")]
     [ApiController]
     [Route("[controller]")]
     public class AuthController : ControllerBase
@@ -28,21 +31,15 @@ namespace MessagingService.Api.Controllers
 
 
         [HttpPost(nameof(Login))]
-        [ProducesResponseType(typeof(LoginResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(LoginResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public IActionResult Login(LoginRequest request)
         {
             var validationResult = request.IsValid();
             if (validationResult.Key == false)
             {
-                logger.Error($"Invalid Login Request : {string.Join(',', validationResult.Value)}. Request : '{System.Text.Json.JsonSerializer.Serialize(request)}'");
-                return BadRequest(new
-                {
-                    errors = new string[]
-                    {
-                        "The username or password is incorrect."
-                    }
-                });
+                logger.Error(validationResult.Value) ;
+                return BadRequest(new BadRequestResponse("The username or password is incorrect."));
             }
 
             try
@@ -51,37 +48,26 @@ namespace MessagingService.Api.Controllers
                 if (account is null)
                 {
                     logger.Error($"Account doesn't exist. Request : '{System.Text.Json.JsonSerializer.Serialize(request)}'");
-                    return BadRequest(new
-                    {
-                        errors = new string[]
-                        {
-                            "The username or password is incorrect."
-                        }
-                    });
+                    return BadRequest(new BadRequestResponse("The username or password is incorrect."));
                 }
 
                 var hashedPassword = passwordService.HashText(request.Password, Convert.FromBase64String(account.PasswordSalt));
                 if (hashedPassword != account.PasswordHash)
                 {
                     logger.Error($"Invalid password. Request : '{System.Text.Json.JsonSerializer.Serialize(request)}'");
-                    return BadRequest(new
-                    {
-                        errors = new string[]
-                        {
-                            "The username or password is incorrect."
-                        }
-                    });
+                    return BadRequest(new BadRequestResponse("The username or password is incorrect."));
                 }
 
                 Dictionary<string, string> claims = new Dictionary<string, string>();
                 claims.Add("Id", account.Id.ToString());
                 claims.Add("UserName", account.UserName);
-
                 var token = jwtService.CreateToken(claims);
+                
+                accountRepository.UpdateLastLogin(account.Id.ToString());
 
                 logger.Info($"Login Succeed for '{account.UserName}'. Request : '{System.Text.Json.JsonSerializer.Serialize(request)}'");
 
-                return Ok(new LoginResult
+                return Ok(new LoginResponse
                 {
                     AccessToken = token,
                     DisplayName = account.DisplayName
@@ -90,13 +76,7 @@ namespace MessagingService.Api.Controllers
             catch (Exception ex)
             {
                 logger.Error($"Unexpected error on Login. Request : '{System.Text.Json.JsonSerializer.Serialize(request)}'", ex);
-                return BadRequest(new
-                {
-                    errors = new string[]
-                    {
-                        "The username or password is incorrect."
-                    }
-                });
+                return BadRequest(new BadRequestResponse("Unable to process Request. Please contact to Admin."));
             }
         }
 
@@ -108,11 +88,8 @@ namespace MessagingService.Api.Controllers
             var validationResult = request.IsValid();
             if (validationResult.Key == false)
             {
-                logger.Error($"Invalid Register Request : {string.Join(',', validationResult.Value)}. Request : '{System.Text.Json.JsonSerializer.Serialize(request)}'");
-                return BadRequest(new
-                {
-                    errors = validationResult.Value
-                });
+                logger.Error(validationResult.Value);
+                return BadRequest(new BadRequestResponse(validationResult.Value));
             }
 
             try
@@ -130,18 +107,12 @@ namespace MessagingService.Api.Controllers
                 });
 
                 logger.Info($"Register Succeed for '{account.UserName}'. Request : '{System.Text.Json.JsonSerializer.Serialize(request)}'");
-                return CreatedAtAction(nameof(Register), new { id = account.Id });
+                return CreatedAtAction(nameof(Register), new { id = account.Id.ToString() });
             }
             catch (Exception ex)
             {
                 logger.Error($"Unexpected error on Register. Request : '{System.Text.Json.JsonSerializer.Serialize(request)}'", ex);
-                return BadRequest(new
-                {
-                    errors = new string[]
-                    {
-                        "Unable to process Request. Please contact to Admin."
-                    }
-                });
+                return BadRequest(new BadRequestResponse("Unable to process Request. Please contact to Admin."));
             }
         }
     }

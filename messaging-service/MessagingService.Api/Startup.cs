@@ -1,6 +1,5 @@
-using MessagingService.Api.Filters;
 using MessagingService.Api.Services;
-using MessagingService.DataAccess.Collection;
+using MessagingService.DataAccess.Repositories;
 using MessagingService.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -38,8 +37,8 @@ namespace MessagingService.Api
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddScoped<IPasswordService, PasswordService>();
-            services.AddScoped<IJwtService, JwtService>(); 
-            services.AddScoped<ILogger, ElasticSearchLogger>(); 
+            services.AddScoped<IJwtService, JwtService>();
+            services.AddScoped<ILogger, ElasticSearchLogger>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
