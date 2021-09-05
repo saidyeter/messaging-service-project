@@ -23,7 +23,6 @@ namespace MessagingService.Api.Services
     {
         public byte[] GenerateSalt()
         {
-            //
             byte[] salt = new byte[128 / 8];
             using (var rngCsp = new RNGCryptoServiceProvider())
             {
@@ -34,7 +33,6 @@ namespace MessagingService.Api.Services
 
         public string HashText(string plainText, byte[] salt)
         {
-            // 
             string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                 password: plainText,
                 salt: salt,

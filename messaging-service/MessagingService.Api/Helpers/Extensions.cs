@@ -17,7 +17,7 @@ namespace MessagingService.Api.Helpers
             else
             {
                 var errors = validationResult.Errors.Select(x => x.ErrorMessage).ToArray();
-                var errorMessage = $"Invalid {nameof(T)} Request : {string.Join(',', errors)}. Request : '{System.Text.Json.JsonSerializer.Serialize(obj)}'";
+                var errorMessage = $"Invalid {typeof(T)} Request : {string.Join(',', errors)}. Request : '{System.Text.Json.JsonSerializer.Serialize(obj)}'";
                 return new KeyValuePair<bool, string>(false, errorMessage);
             }
         }

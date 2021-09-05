@@ -1,17 +1,13 @@
 ﻿using MessagingService.Api.Helpers;
+using MessagingService.Api.Models.Common;
 using MessagingService.Api.Models.Message;
-using MessagingService.Api.Services;
-using MessagingService.DataAccess.Repositories;
 using MessagingService.DataAccess.Model;
+using MessagingService.DataAccess.Repositories;
 using MessagingService.Logging;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using System;
-using System.Net;
-using MessagingService.Api.Models.Common;
-using MongoDB.Bson;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 
 namespace MessagingService.Api.Controllers
 {
@@ -222,7 +218,7 @@ namespace MessagingService.Api.Controllers
             }
             return Ok();
         }
-    
+
     }
 
 }
