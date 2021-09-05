@@ -65,7 +65,7 @@ namespace MessagingService.Api.Controllers
                 
                 accountRepository.UpdateLastLogin(account.Id.ToString());
 
-                logger.Info($"Login Succeed for '{account.UserName}'. Request : '{System.Text.Json.JsonSerializer.Serialize(request)}'");
+                logger.Info($"Login Succeed for '{account.UserName}'.");
 
                 return Ok(new LoginResponse
                 {
@@ -106,7 +106,7 @@ namespace MessagingService.Api.Controllers
                     UserName = request.UserName
                 });
 
-                logger.Info($"Register Succeed for '{account.UserName}'. Request : '{System.Text.Json.JsonSerializer.Serialize(request)}'");
+                logger.Info($"Register Succeed for '{account.UserName}'.");
                 return CreatedAtAction(nameof(Register), new { id = account.Id.ToString() });
             }
             catch (Exception ex)

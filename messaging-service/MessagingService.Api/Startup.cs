@@ -1,3 +1,4 @@
+using MessagingService.Api.Helpers;
 using MessagingService.Api.Services;
 using MessagingService.DataAccess.Repositories;
 using MessagingService.Logging;
@@ -41,8 +42,9 @@ namespace MessagingService.Api
             services.AddScoped<ILogger, ElasticSearchLogger>();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,ILogger logger)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -53,6 +55,8 @@ namespace MessagingService.Api
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.ConfigureExceptionHandler(logger);
 
             app.UseEndpoints(endpoints =>
             {
