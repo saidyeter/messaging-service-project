@@ -4,25 +4,18 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Linq;
 
-namespace MessagingService.Api.Filters
+namespace MessagingService.Api.Helpers
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class JwtAuthorizeAttribute : Attribute, IAuthorizationFilter
     {
         private IJwtService jwtService;
-
-        public JwtAuthorizeAttribute()
-        {
-
-
-        }
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             if (jwtService is null)
             {
                 jwtService = (IJwtService)context.HttpContext.RequestServices.GetService(typeof(IJwtService));
             }
-
 
             var token = context.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
             if (token is null)
@@ -37,15 +30,14 @@ namespace MessagingService.Api.Filters
                 {
                     context.Result = new UnauthorizedResult();
                 }
-
+                context.HttpContext.Request.Headers.Add("Id", claims["Id"]);
+                context.HttpContext.Request.Headers.Add("UserName", claims["UserName"]);
             }
             catch (Exception ex)
             {
-                //logla
+                System.Diagnostics.Debug.WriteLine("JWT resolve error: " + ex.Message);
                 context.Result = new UnauthorizedResult();
-
             }
-
         }
     }
 }

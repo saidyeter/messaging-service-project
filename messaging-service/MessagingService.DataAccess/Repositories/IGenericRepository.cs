@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace MessagingService.DataAccess.Collection
+namespace MessagingService.DataAccess.Repositories
 {
     public interface IGenericRepository<TModel>
     {
@@ -25,6 +25,8 @@ namespace MessagingService.DataAccess.Collection
         TModel GetSingleOrDefault(Expression<Func<TModel, bool>> filter);
 
         long Count(Expression<Func<TModel, bool>> filter);
+
+        bool DoesExist(Expression<Func<TModel, bool>> filter);
     }
 
 

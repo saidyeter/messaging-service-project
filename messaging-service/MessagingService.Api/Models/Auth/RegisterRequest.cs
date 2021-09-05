@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
+using MessagingService.Api.Helpers;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MessagingService.Api.Models.Auth
 {
@@ -11,24 +11,9 @@ namespace MessagingService.Api.Models.Auth
         public string EMail { get; set; }
         public string Password { get; set; }
 
-
-        public KeyValuePair<bool, string[]> IsValid()
-        {
-            RegisterRequestValidator validator = new RegisterRequestValidator();
-            var validationResult = validator.Validate(this);
-            if (validationResult.IsValid)
-            {
-                return new KeyValuePair<bool, string[]>(true, null);
-            }
-            else
-            {
-                return new KeyValuePair<bool, string[]>(false, validationResult.Errors.Select(x => x.ErrorMessage).ToArray());
-            }
-        }
-
-
+        public KeyValuePair<bool, string> IsValid() => new RegisterRequestValidator().IsValid(this);
     }
-     
+
     public class RegisterRequestValidator : AbstractValidator<RegisterRequest>
     {
         public RegisterRequestValidator()
@@ -44,5 +29,5 @@ namespace MessagingService.Api.Models.Auth
 
         }
     }
-   
+
 }

@@ -1,29 +1,15 @@
 ﻿using FluentValidation;
-using System;
+using MessagingService.Api.Helpers;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MessagingService.Api.Models.Auth
 {
     public class LoginRequest
     {
         public string UserName { get; set; }
-
         public string Password { get; set; }
 
-        public KeyValuePair<bool, string[]> IsValid()
-        {
-            LoginRequestValidator validator = new LoginRequestValidator();
-            var validationResult = validator.Validate(this);
-            if (validationResult.IsValid)
-            {
-                return new KeyValuePair<bool, string[]>(true, null);
-            }
-            else
-            {
-                return new KeyValuePair<bool, string[]>(false, validationResult.Errors.Select(x => x.ErrorMessage).ToArray());
-            }
-        }
+        public KeyValuePair<bool, string> IsValid() => new LoginRequestValidator().IsValid(this);
     }
 
     public class LoginRequestValidator : AbstractValidator<LoginRequest>
