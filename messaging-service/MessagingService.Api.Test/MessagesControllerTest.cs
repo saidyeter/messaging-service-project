@@ -343,7 +343,7 @@ namespace MessagingService.Api.Test
                 Returns(messageIdList);
 
 
-            var actionResult = messagesController.LastMessagesFrom(messageId);
+            var actionResult = messagesController.GetOlderMessagesFrom(messageId);
             Assert.IsType<OkObjectResult>(actionResult);
 
             var result = actionResult as OkObjectResult;
@@ -364,7 +364,7 @@ namespace MessagingService.Api.Test
                 HttpContext = contextMock.Object
             };
 
-            var actionResult = messagesController.LastMessagesFrom(messageId);
+            var actionResult = messagesController.GetOlderMessagesFrom(messageId);
             Assert.IsType<BadRequestObjectResult>(actionResult);
             var result = actionResult as BadRequestObjectResult;
             var response = result.Value as BadRequestResponse;
@@ -392,7 +392,7 @@ namespace MessagingService.Api.Test
               Setup(x => x.GetOlderMessages(It.IsAny<string>(), It.IsAny<string>())).
               Throws(new Exception("Couldn't get messages"));
 
-            var actionResult = messagesController.LastMessagesFrom(messageId);
+            var actionResult = messagesController.GetOlderMessagesFrom(messageId);
             Assert.IsType<BadRequestObjectResult>(actionResult);
             var result = actionResult as BadRequestObjectResult;
             var response = result.Value as BadRequestResponse;
@@ -426,7 +426,7 @@ namespace MessagingService.Api.Test
                Setup(x => x.GetLatestMessage(It.IsAny<string>(), It.IsAny<string>())).
                Returns(messageId);
 
-            var actionResult = messagesController.LatestMessageBetween(opponent);
+            var actionResult = messagesController.GetLatestMessageBetween(opponent);
             Assert.IsType<OkObjectResult>(actionResult);
 
             var result = actionResult as OkObjectResult;
@@ -447,7 +447,7 @@ namespace MessagingService.Api.Test
                 HttpContext = contextMock.Object
             };
 
-            var actionResult = messagesController.LatestMessageBetween(messageId);
+            var actionResult = messagesController.GetLatestMessageBetween(messageId);
             Assert.IsType<BadRequestObjectResult>(actionResult);
             var result = actionResult as BadRequestObjectResult;
             var response = result.Value as BadRequestResponse;
@@ -475,7 +475,7 @@ namespace MessagingService.Api.Test
               Setup(x => x.GetLatestMessage(It.IsAny<string>(), It.IsAny<string>())).
               Throws(new Exception("Couldn't find message"));
 
-            var actionResult = messagesController.LatestMessageBetween(messageId);
+            var actionResult = messagesController.GetLatestMessageBetween(messageId);
             Assert.IsType<BadRequestObjectResult>(actionResult);
             var result = actionResult as BadRequestObjectResult;
             var response = result.Value as BadRequestResponse;
@@ -493,7 +493,7 @@ namespace MessagingService.Api.Test
         {
             var blockUserRequest = new BlockUserRequest
             {
-                OpponentUser = "OpponentUser"
+                Opponent = "OpponentUser"
             };
             var headers = new HeaderDictionary(new Dictionary<String, StringValues>
             {
@@ -517,7 +517,7 @@ namespace MessagingService.Api.Test
         {
             var blockUserRequest = new BlockUserRequest
             {
-                OpponentUser = "OpponentUser"
+                Opponent = "OpponentUser"
             }; 
             var headers = new HeaderDictionary(new Dictionary<String, StringValues>()) as IHeaderDictionary;
             requestMock.Setup(x => x.Headers).Returns(headers);
@@ -541,7 +541,7 @@ namespace MessagingService.Api.Test
         {
             var blockUserRequest = new BlockUserRequest
             {
-                OpponentUser = "opponentUser"
+                Opponent = "opponentUser"
             };
             var headers = new HeaderDictionary(new Dictionary<String, StringValues>
             {

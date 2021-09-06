@@ -21,7 +21,10 @@ namespace MessagingService.DataAccess.Repositories
             {
                 throw new System.Exception($"Account doesn't exist ({opponent})");
             }
-
+            if (user.BlockedUsers is null)
+            {
+                user.BlockedUsers = new System.Collections.Generic.List<string>();
+            }
             user.BlockedUsers.Add(opponent);
 
             Update(user);
@@ -29,13 +32,20 @@ namespace MessagingService.DataAccess.Repositories
 
         public bool IsBlocked(string userId, string opponent)
         {
-            var user = GetById(userId);
-            var blockedUser = GetFirstOrDefault(x => x.UserName == opponent);
-            if (blockedUser is null)
+            var senderUser = GetById(userId);
+            var opponentUser = GetFirstOrDefault(x => x.UserName == opponent);
+            if (opponentUser is null)
             {
                 throw new System.Exception($"Account doesn't exist ({opponent})");
             }
-            return user.BlockedUsers.Any(x => x == opponent);
+
+
+            if (opponentUser.BlockedUsers is null)
+            {
+                return false;
+            } 
+
+            return  opponentUser.BlockedUsers.Any(x => x == senderUser.UserName);
         }
 
         public void UpdateLastLogin(string userId)
