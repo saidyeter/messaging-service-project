@@ -1,5 +1,5 @@
 ﻿using MessagingService.DataAccess.Model;
-using MongoDB.Bson;
+using MessagingService.DataAccess.Repositories.Base;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -51,7 +51,7 @@ namespace MessagingService.DataAccess.Repositories
                                     (x.ReceiverUser == message.ReceiverUser && x.SenderUser == message.SenderUser) ||
                                     (x.ReceiverUser == message.SenderUser && x.SenderUser == message.ReceiverUser))).
                       Limit(MAX_MESSAGE_COUNT).
-                      SortByDescending(x=> x.InsertAt).
+                      SortByDescending(x => x.InsertAt).
                       Project<MessageModel>(fields).
                       ToList().
                       Select(x => x.Id.ToString()).

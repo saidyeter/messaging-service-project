@@ -1,4 +1,6 @@
-﻿namespace MessagingService.DataAccess.Model
+﻿using MessagingService.DataAccess.Model.Base;
+
+namespace MessagingService.DataAccess.Model
 {
     public class AccountModel : BaseDocumentModel
     {

@@ -317,9 +317,9 @@ namespace MessagingService.Api.Test
 
         #endregion
 
-        #region Last Messages From Tests
+        #region Get Older Messages From Tests
         [Fact]
-        public void LastMessagesFrom_Succesful()
+        public void GetOlderMessagesFrom_Succesful()
         {
             string messageId = "messageId";
             var headers = new HeaderDictionary(new Dictionary<String, StringValues>
@@ -353,7 +353,7 @@ namespace MessagingService.Api.Test
         }
 
         [Fact]
-        public void LastMessagesFrom_Fail_SenderAccountCouldntIdentify()
+        public void GetOlderMessagesFrom_Fail_SenderAccountCouldntIdentify()
         {
             string messageId = "messageId";
             var headers = new HeaderDictionary(new Dictionary<String, StringValues>()) as IHeaderDictionary;
@@ -374,7 +374,7 @@ namespace MessagingService.Api.Test
         }
 
         [Fact]
-        public void LastMessagesFrom_Fail_CouldntGetMessages()
+        public void GetOlderMessagesFrom_Fail_CouldntGetMessages()
         {
             string messageId = "messageId";
             var headers = new HeaderDictionary(new Dictionary<String, StringValues>
@@ -403,11 +403,10 @@ namespace MessagingService.Api.Test
 
         #endregion
 
-
-        #region Latest Message Between Tests
+        #region Get Latest Message Between Tests
 
         [Fact]
-        public void LatestMessageBetween_Succesfull()
+        public void GetLatestMessageBetween_Succesfull()
         {
             string opponent = "opponent";
             var headers = new HeaderDictionary(new Dictionary<String, StringValues>
@@ -436,7 +435,7 @@ namespace MessagingService.Api.Test
         }
 
         [Fact]
-        public void LatestMessageBetween_Fail_SenderAccountCouldntIdentify()
+        public void GetLatestMessageBetween_Fail_SenderAccountCouldntIdentify()
         {
             string messageId = "messageId";
             var headers = new HeaderDictionary(new Dictionary<String, StringValues>()) as IHeaderDictionary;
@@ -457,7 +456,7 @@ namespace MessagingService.Api.Test
         }
 
         [Fact]
-        public void LatestMessageBetween_Fail_CouldntFindMessage()
+        public void GetLatestMessageBetween_Fail_CouldntFindMessage()
         {
             string messageId = "messageId";
             var headers = new HeaderDictionary(new Dictionary<String, StringValues>

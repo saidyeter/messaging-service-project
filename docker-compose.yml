@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
  
 volumes:
   elasticsearch:
@@ -22,7 +22,7 @@ services:
       - PUID=1000
       - PGID=1000
     volumes:
-      - /home/said/mongodb/database:/data/db
+      - ~/mongodb/database:/data/db
     ports:
       - 27017:27017
     restart: unless-stopped  
@@ -54,6 +54,7 @@ services:
     restart: unless-stopped
 
   nginx:
+    container_name: 'nginx-load-balancer'
     image: nginx:latest
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
