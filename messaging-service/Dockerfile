@@ -1,6 +1,4 @@
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
-ENV TZ=Europe/Istanbul
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 WORKDIR /app
 EXPOSE 80

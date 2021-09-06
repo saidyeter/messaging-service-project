@@ -94,6 +94,12 @@ namespace MessagingService.Api.Controllers
 
             try
             {
+
+                if (accountRepository.DoesExist(x => x.UserName == request.UserName))
+                {
+                    logger.Error("Username exists.");
+                    return BadRequest(new BadRequestResponse("Username exists."));
+                }
                 var passwordSalt = passwordService.GenerateSalt();
                 var hashedPassword = passwordService.HashText(request.Password, passwordSalt);
 
