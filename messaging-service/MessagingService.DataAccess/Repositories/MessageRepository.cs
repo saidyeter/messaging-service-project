@@ -51,6 +51,7 @@ namespace MessagingService.DataAccess.Repositories
                                     (x.ReceiverUser == message.ReceiverUser && x.SenderUser == message.SenderUser) ||
                                     (x.ReceiverUser == message.SenderUser && x.SenderUser == message.ReceiverUser))).
                       Limit(MAX_MESSAGE_COUNT).
+                      SortByDescending(x=> x.InsertAt).
                       Project<MessageModel>(fields).
                       ToList().
                       Select(x => x.Id.ToString()).

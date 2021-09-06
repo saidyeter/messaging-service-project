@@ -122,11 +122,11 @@ namespace MessagingService.Api.Controllers
         /// <summary> retrieves last certain amount messages from message that has id specified in parameters </summary>
         /// <param name="messageId"> id of message that start point to retrospective dialog </param>
         /// <returns> found message id list </returns>
-        [HttpGet("​LastMessagesFrom/{messageId}")]
+        [HttpGet("​GetOlderMessagesFrom/{messageId}")]
         [ProducesResponseType(typeof(LastMessagesResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(BadRequestResponse), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public IActionResult LastMessagesFrom(string messageId)
+        public IActionResult GetOlderMessagesFrom(string messageId)
         {
             var usernametaken = Request.Headers.TryGetValue("UserName", out Microsoft.Extensions.Primitives.StringValues SenderUserName);
             if (!usernametaken)
@@ -157,11 +157,11 @@ namespace MessagingService.Api.Controllers
         /// <summary> retrieves latest message between signed in user and opponent user for start point </summary>
         /// <param name="opponent"> user messaging with </param>
         /// <returns> latest message id </returns>
-        [HttpGet("​LatestMessageBetween/{opponent}")]
+        [HttpGet("Get​LatestMessageBetween/{opponent}")]
         [ProducesResponseType(typeof(LatestMessageResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(BadRequestResponse), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public IActionResult LatestMessageBetween(string opponent)
+        public IActionResult GetLatestMessageBetween(string opponent)
         {
             var usernametaken = Request.Headers.TryGetValue("UserName", out Microsoft.Extensions.Primitives.StringValues SenderUserName);
             if (!usernametaken)
@@ -206,13 +206,13 @@ namespace MessagingService.Api.Controllers
             var userIdTaken = Request.Headers.TryGetValue("Id", out Microsoft.Extensions.Primitives.StringValues SenderUserId);
             if (!userIdTaken)
             {
-                logger.Error($"Sender account couldn't identify. opponent :'{request.OpponentUser}'");
+                logger.Error($"Sender account couldn't identify. opponent :'{request.Opponent}'");
                 return BadRequest(new BadRequestResponse("Unable to process Request. Please contact to Admin."));
             }
 
             try
             {
-                accountRepository.BlockUser(SenderUserId.ToString(), request.OpponentUser);
+                accountRepository.BlockUser(SenderUserId.ToString(), request.Opponent);
             }
             catch (Exception ex)
             {
