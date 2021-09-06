@@ -2,12 +2,14 @@
 
 This repository contains an app that is written for messaging. Also contains its dependencies.  
 
-The app is an ASP.NET Core Web API application and written in .Net 5.0.  
+This is an ASP.NET Core Web API application and written in .Net 5.0.  
 
 This app provides sending message and accessing message history by logging in after register.  
 *Methods are explained in depth below.*  
 
-This app uses MongoDB to store message data and uses ElasticSearch to store logs. To see logs, Kibana is used.  
+Used MongoDB to store message data.  
+Used Elastic Search to store logs.  
+Used Kibana to examine logs.  
 
 The app is placed behind NGINX. Thus, NGINX can load-balance when app is scaled.
 
@@ -47,7 +49,7 @@ Request body example:
 ```
 When request is invalid or username is taken, response returns with an error message as `BadRequest(400)`.
 Otherwise response returns as `Created(201)` with user id. 
-> User id returns only for information, cannot be used any methods.
+> User id returns only for information, cannot be used within any methods.
 
 #### Login `POST /Auth/Login`
 

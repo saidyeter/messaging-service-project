@@ -1,4 +1,5 @@
 ﻿using MessagingService.DataAccess.Model;
+using MessagingService.DataAccess.Repositories.Base;
 
 namespace MessagingService.DataAccess.Repositories
 {

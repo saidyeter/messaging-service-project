@@ -1,4 +1,4 @@
-﻿using MessagingService.DataAccess.Model;
+﻿using MessagingService.DataAccess.Model.Base;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace MessagingService.DataAccess.Repositories
+namespace MessagingService.DataAccess.Repositories.Base
 {
     public abstract class GenericRepository<TModel> : IGenericRepository<TModel>
         where TModel : BaseDocumentModel
@@ -29,7 +29,7 @@ namespace MessagingService.DataAccess.Repositories
         }
 
         public virtual TModel GetById(string id)
-        { 
+        {
             ObjectId docId;
             try
             {

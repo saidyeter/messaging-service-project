@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace MessagingService.DataAccess.Repositories
+namespace MessagingService.DataAccess.Repositories.Base
 {
     public interface IGenericRepository<TModel>
     {

@@ -1,4 +1,5 @@
 ﻿using MessagingService.DataAccess.Model;
+using MessagingService.DataAccess.Repositories.Base;
 using MongoDB.Driver;
 using System.Linq;
 
