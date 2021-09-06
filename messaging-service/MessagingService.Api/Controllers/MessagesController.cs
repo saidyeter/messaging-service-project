@@ -76,7 +76,10 @@ namespace MessagingService.Api.Controllers
                     SenderUser = SenderUserName.ToString()
                 });
 
-                return CreatedAtAction(nameof(SendMessage), new { id = createResult.Id.ToString() });
+                return CreatedAtAction(nameof(SendMessage), new SendResponse
+                {
+                    MessageId = createResult.Id.ToString()
+                });
             }
             catch (Exception ex)
             {
