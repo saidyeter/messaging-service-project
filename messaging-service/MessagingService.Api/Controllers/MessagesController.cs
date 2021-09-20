@@ -4,6 +4,7 @@ using MessagingService.Api.Models.Message;
 using MessagingService.DataAccess.Model;
 using MessagingService.DataAccess.Repositories;
 using MessagingService.Logging;
+using MessagingService.MessagePublisher;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -19,12 +20,14 @@ namespace MessagingService.Api.Controllers
         private readonly IMessageRepository messageRepository;
         private readonly ILogger logger;
         private readonly IAccountRepository accountRepository;
+        private readonly IMessagePublisher messagePublisher;
 
-        public MessagesController(IMessageRepository messageRepository, ILogger logger, IAccountRepository accountRepository)
+        public MessagesController(IMessageRepository messageRepository, ILogger logger, IAccountRepository accountRepository, IMessagePublisher messagePublisher)
         {
             this.messageRepository = messageRepository;
             this.logger = logger;
             this.accountRepository = accountRepository;
+            this.messagePublisher = messagePublisher;
         }
 
 
@@ -75,6 +78,9 @@ namespace MessagingService.Api.Controllers
                     ReceiverUser = request.ReceiverUser,
                     SenderUser = SenderUserName.ToString()
                 });
+                //public static PublishMessage(string connectionString, string channel, string messageId, string senderUser, string receiverUser)
+                var channel = "ch";
+                messagePublisher.PublishMessage(channel, createResult.Id.ToString(), createResult.SenderUser, createResult.ReceiverUser);
 
                 return CreatedAtAction(nameof(SendMessage), new SendResponse
                 {

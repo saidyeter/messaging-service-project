@@ -34,6 +34,4 @@ namespace MessagingService.Api.Helpers
         }
 
     }
-
-
 }

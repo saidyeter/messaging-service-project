@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessagingService.DataAccess
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessagingService.Logging", "MessagingService.Logging\MessagingService.Logging.csproj", "{5CE0A20F-E81B-4ADA-8E00-AFF1490617F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessagingService.Api.Test", "MessagingService.Api.Test\MessagingService.Api.Test.csproj", "{1DA59161-CEBA-429E-951D-058A2AA66F87}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessagingService.Api.Test", "MessagingService.Api.Test\MessagingService.Api.Test.csproj", "{1DA59161-CEBA-429E-951D-058A2AA66F87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessagingService.MessagePublisher", "MessagingService.MessagePublisher\MessagingService.MessagePublisher.csproj", "{B44BB744-7CFA-4B13-B3A7-51794C5DA0FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{1DA59161-CEBA-429E-951D-058A2AA66F87}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DA59161-CEBA-429E-951D-058A2AA66F87}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DA59161-CEBA-429E-951D-058A2AA66F87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B44BB744-7CFA-4B13-B3A7-51794C5DA0FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B44BB744-7CFA-4B13-B3A7-51794C5DA0FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B44BB744-7CFA-4B13-B3A7-51794C5DA0FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B44BB744-7CFA-4B13-B3A7-51794C5DA0FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
