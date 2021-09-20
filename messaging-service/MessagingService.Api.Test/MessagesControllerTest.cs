@@ -4,6 +4,7 @@ using MessagingService.Api.Models.Message;
 using MessagingService.DataAccess.Model;
 using MessagingService.DataAccess.Repositories;
 using MessagingService.Logging;
+using MessagingService.MessagePublisher;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -20,6 +21,7 @@ namespace MessagingService.Api.Test
         private readonly Mock<ILogger> loggerMock;
         private readonly Mock<IAccountRepository> accountRepositoryMock;
         private readonly Mock<IMessageRepository> messageRepositoryMock;
+        private readonly Mock<IMessagePublisher> messagePublisherMock;
         private readonly Mock<HttpContext> contextMock;
         private readonly Mock<HttpRequest> requestMock;
 
@@ -30,7 +32,8 @@ namespace MessagingService.Api.Test
             messageRepositoryMock = new Mock<IMessageRepository>();
             accountRepositoryMock = new Mock<IAccountRepository>();
             loggerMock = new Mock<ILogger>();
-            messagesController = new MessagesController(messageRepositoryMock.Object, loggerMock.Object, accountRepositoryMock.Object);
+            messagePublisherMock = new Mock<IMessagePublisher>();
+            messagesController = new MessagesController(messageRepositoryMock.Object, loggerMock.Object, accountRepositoryMock.Object, messagePublisherMock.Object);
             contextMock = new Mock<HttpContext>();
             requestMock = new Mock<HttpRequest>();
         }

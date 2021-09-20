@@ -2,6 +2,7 @@ using MessagingService.Api.Helpers;
 using MessagingService.Api.Services;
 using MessagingService.DataAccess.Repositories;
 using MessagingService.Logging;
+using MessagingService.MessagePublisher;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -23,16 +24,14 @@ namespace MessagingService.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-
+            //services.AddCors(options => options.AddDefaultPolicy(b => b.WithOrigins("http//localhost:5000").AllowAnyHeader().AllowAnyMethod()));
+            services.AddCors(options => options.AddDefaultPolicy(b => b.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MessagingService.Api", Version = "v1" });
-
-                var filePath = System.IO.Path.Combine(System.AppContext.BaseDirectory, "MessagingService.Api.xml");
-                c.IncludeXmlComments(filePath);
             });
-            ;
+            
             services.AddScoped<IMongoClient>(x => new MongoClient(connectionString: Configuration.GetConnectionString("MongoDB")));
 
             services.AddScoped<IAccountRepository, AccountRepository>();
@@ -40,6 +39,7 @@ namespace MessagingService.Api
             services.AddScoped<IPasswordService, PasswordService>();
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<ILogger, ElasticSearchLogger>();
+            services.AddScoped<IMessagePublisher, RedisMessagePublisher>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env,ILogger logger)
@@ -54,6 +54,8 @@ namespace MessagingService.Api
 
             app.UseRouting();
 
+            app.UseCors();
+
             app.UseAuthorization();
 
             app.ConfigureExceptionHandler(logger);
@@ -61,6 +63,7 @@ namespace MessagingService.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+
             });
         }
     }
