@@ -128,7 +128,7 @@ namespace MessagingService.Api.Controllers
         /// <summary> retrieves last certain amount messages from message that has id specified in parameters </summary>
         /// <param name="messageId"> id of message that start point to retrospective dialog </param>
         /// <returns> found message id list </returns>
-        [HttpGet("​GetOlderMessagesFrom/{messageId}")]
+        [HttpGet("GetOlderMessagesFrom/{messageId}")]
         [ProducesResponseType(typeof(LastMessagesResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(BadRequestResponse), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
@@ -163,7 +163,7 @@ namespace MessagingService.Api.Controllers
         /// <summary> retrieves latest message between signed in user and opponent user for start point </summary>
         /// <param name="opponent"> user messaging with </param>
         /// <returns> latest message id </returns>
-        [HttpGet("Get​LatestMessageBetween/{opponent}")]
+        [HttpGet("GetLatestMessageBetween/{opponent}")]
         [ProducesResponseType(typeof(LatestMessageResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(BadRequestResponse), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]

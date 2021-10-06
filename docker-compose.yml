@@ -41,6 +41,8 @@ services:
     ports:
       - 27017:27017
     restart: unless-stopped
+    logging:
+      driver: "none"
 
   ms-elasticsearch:
     container_name: 'elasticsearch'
@@ -53,6 +55,8 @@ services:
     restart: unless-stopped
     volumes:
       - elasticsearch:/usr/share/elasticsearch/data:rw
+    logging:
+      driver: "none"
 
   ms-kibana:
     container_name: 'kibana'
