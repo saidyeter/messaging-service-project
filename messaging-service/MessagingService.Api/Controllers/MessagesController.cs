@@ -98,7 +98,7 @@ namespace MessagingService.Api.Controllers
         /// <summary> retrieves single message that has id specified in parameters </summary>
         /// <param name="messageId"> id of message </param>
         /// <returns> message detail </returns>
-        [HttpGet("​GetMessage/{messageId}")]
+        [HttpGet("GetMessage/{messageId}")]
         [ProducesResponseType(typeof(MessageDTO), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(BadRequestResponse), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
