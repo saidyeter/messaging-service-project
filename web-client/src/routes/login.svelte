@@ -79,7 +79,10 @@
         color: #ff3e00;
         text-transform: uppercase;
         font-size: 2em;
-        font-weight: 100;
+        font-weight: 300;
+    }
+    h2{
+        font-weight: 300;
     }
 
     @media (max-width: 640px) {
@@ -88,3 +91,6 @@
         }
     }
 </style>
+
+
+

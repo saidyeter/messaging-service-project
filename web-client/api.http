@@ -1,0 +1,29 @@
+###LOGIN###
+POST http://localhost:4000/auth/login HTTP/1.1
+content-type: application/json
+
+{
+    "username": "user1",
+    "password": "Super44"
+}
+
+
+#token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjYxNGY0ODFmMjU2OTg1YTJjM2NiYjU3ZCIsIlVzZXJOYW1lIjoic2FpZCIsIm5iZiI6MTYzMzYzMzU0MywiZXhwIjoxNjMzNjM0NDQzLCJpYXQiOjE2MzM2MzM1NDN9.0NWWLXdFqpH2Y_9bCnDiXqzNkYxhaRQdDAsL9rMQjrg
+
+###SEND MESSAGE###
+POST http://localhost:4000/Messages/SendMessage HTTP/1.1
+
+Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjYxNGY0ODFmMjU2OTg1YTJjM2NiYjU3ZCIsIlVzZXJOYW1lIjoic2FpZCIsIm5iZiI6MTYzMzYzNDMxMSwiZXhwIjoxNjMzNjM1MjExLCJpYXQiOjE2MzM2MzQzMTF9.6j4XD4cNvNw3U0zpqpVgPdNdIkR8GDpqu8ZULWF6WOQ"
+content-type: application/json
+
+{
+  "receiverUser": "user1",
+  "message": "selam"
+}
+
+
+###
+POST url HTTP/1.1
+header name: header value
+
+content

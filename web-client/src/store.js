@@ -42,3 +42,4 @@ function getCookie(c_name) {
 }
 
 export const authStore = persistStore('accessToken', "")
+export const messageList = writable([])
