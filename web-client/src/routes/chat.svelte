@@ -1,5 +1,5 @@
 <script>
-    import { fade, fly } from "svelte/transition";
+    import { fade, fly,blur } from "svelte/transition";
     import {
         apiGetLastMessageId,
         apiGetOlderMessagesFrom,

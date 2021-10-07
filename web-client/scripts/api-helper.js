@@ -38,12 +38,12 @@ export function apiGetLastMessageId(accessToken,opponent) {
 
 
 export function apiGetOlderMessagesFrom(accessToken,messageId) {
-    const path = `/Messages/​GetOlderMessagesFrom/${messageId}`
+    const path = `/Messages/GetOlderMessagesFrom/${messageId}`
     return apiGetWithAuth(path,accessToken)
 }
 
 export function apiGetSingleMessage(accessToken,messageId) {
-    const path = `/Messages/​GetMessage/${messageId}`
+    const path = `/Messages/GetMessage/${messageId}`
     return apiGetWithAuth(path,accessToken)
 }
 
