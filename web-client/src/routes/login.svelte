@@ -1,6 +1,6 @@
 <script>
     import { apiLogin } from "../../scripts/api-helper";
-    import { authStore } from "../store";
+    import { authStore,currentUser } from "../store";
     import { Router, Link, Route } from "svelte-routing";
     import { getNotificationsContext } from "svelte-notifications";
 
@@ -41,6 +41,7 @@
             var res = await apiLogin(username, password);
             console.log("api result : ", JSON.stringify(res, null, 2));
             authStore.set(res.accessToken);
+            currentUser.set(username)
             dispatch("successfulLogin");
         } catch (error) {
             addNotification({

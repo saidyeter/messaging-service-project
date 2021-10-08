@@ -30,6 +30,18 @@ namespace MessagingService.Api.Helpers
                 Message = messageEntity.Message,
                 SenderUser = messageEntity.SenderUser,
                 ReceiverUser = messageEntity.ReceiverUser,
+                SeenAt = messageEntity.SeenAt,
+                SendedAt = messageEntity.SeenAt,
+            };
+        }
+        public static AccountDTO AsDTO(this DataAccess.Model.AccountModel accountEntity)
+        {
+            return new AccountDTO
+            {
+                DisplayName = accountEntity.DisplayName,
+                EMail = accountEntity.EMail,
+                LastLogin = accountEntity.LastLogin,
+                UserName = accountEntity.UserName,
             };
         }
 

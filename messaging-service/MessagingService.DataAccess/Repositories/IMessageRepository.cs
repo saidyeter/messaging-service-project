@@ -9,6 +9,7 @@ namespace MessagingService.DataAccess.Repositories
         MessageModel GetSingleMessage(string id, string username);
         List<string> GetOlderMessages(string id, string username);
         string GetLatestMessage(string senderUsername, string receiverUsername);
+        void SetSeen(string id);
     }
 
 }

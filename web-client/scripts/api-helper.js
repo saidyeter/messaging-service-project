@@ -12,7 +12,7 @@ export function apiLogin(username, password) {
 
 export function apiRegister(displayname, email, username, password) {
 
-    const path = "/auth/register"    
+    const path = "/auth/register"
     const data = {
         username,
         password,
@@ -23,30 +23,35 @@ export function apiRegister(displayname, email, username, password) {
 }
 
 export function apiGetOpponents(accessToken) {
-    return [
-        {username:"user1", displayname:"User 1"},
-        {username:"user2", displayname:"User 2"},
-        {username:"user3", displayname:"User 3"},
-        {username:"user4", displayname:"User 4"},
-    ]
+    const path = `/Messages/GetOpponents`
+    return apiGetWithAuth(path, accessToken)
 }
 
-export function apiGetLastMessageId(accessToken,opponent) {
+export function apiGetLastMessageId(accessToken, opponent) {
     const path = `/Messages/GetLatestMessageBetween/${opponent}`
-    return apiGetWithAuth(path,accessToken)
+    return apiGetWithAuth(path, accessToken)
 }
 
 
-export function apiGetOlderMessagesFrom(accessToken,messageId) {
+export function apiGetOlderMessagesFrom(accessToken, messageId) {
     const path = `/Messages/GetOlderMessagesFrom/${messageId}`
-    return apiGetWithAuth(path,accessToken)
+    return apiGetWithAuth(path, accessToken)
 }
 
-export function apiGetSingleMessage(accessToken,messageId) {
+export function apiGetSingleMessage(accessToken, messageId) {
     const path = `/Messages/GetMessage/${messageId}`
-    return apiGetWithAuth(path,accessToken)
+    return apiGetWithAuth(path, accessToken)
 }
 
+export function apiSendMessage(accessToken,receiverUser, message) {
+
+    const path = "/messages/SendMessage"
+    const data = {
+        receiverUser,
+        message
+    }
+    return apiPostWithAuth(path,accessToken, data)
+}
 
 async function callApi(path, data, verb) {
     const resource = apiUrl + path
@@ -78,7 +83,7 @@ async function callApi(path, data, verb) {
 
 
 async function apiPost(path, data) {
-   return callApi(path,data,'POST')
+    return callApi(path, data, 'POST')
 }
 
 
@@ -111,6 +116,26 @@ async function apiGetWithAuth(path, accessToken) {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + accessToken,
         }
+    })
+    var result = await response.json()
+    if (response.status == 200 || response.status == 201) {
+        return result
+    } else {
+        const err = JSON.stringify(result, null, 2)
+        console.error("Error on api: ", err);
+        throw new Error(result.error)
+    }
+}
+
+async function apiPostWithAuth(path, accessToken, data) {
+    const resource = apiUrl + path
+    var response = await fetch(resource, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken,
+        },
+        body:JSON.stringify(data)
     })
     var result = await response.json()
     if (response.status == 200 || response.status == 201) {

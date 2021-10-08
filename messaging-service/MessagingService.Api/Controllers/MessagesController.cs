@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Linq;
 
 namespace MessagingService.Api.Controllers
 {
@@ -78,7 +79,8 @@ namespace MessagingService.Api.Controllers
                     ReceiverUser = request.ReceiverUser,
                     SenderUser = SenderUserName.ToString()
                 });
-                //public static PublishMessage(string connectionString, string channel, string messageId, string senderUser, string receiverUser)
+                accountRepository.UpdateLastMessage(SenderUserName.ToString(), request.ReceiverUser);
+                
                 var channel = "ch";
                 messagePublisher.PublishMessage(channel, createResult.Id.ToString(), createResult.SenderUser, createResult.ReceiverUser);
 
@@ -227,6 +229,40 @@ namespace MessagingService.Api.Controllers
             }
             return Ok();
         }
+
+
+
+        /// <summary> retrieves latest message between signed in user and opponent user for start point </summary>
+        /// <param name="opponent"> user messaging with </param>
+        /// <returns> latest message id </returns>
+        [HttpGet("GetOpponents")]
+        [ProducesResponseType(typeof(AccountDTO[]), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(BadRequestResponse), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+        public IActionResult GetOpponents()
+        {
+            var userIdTaken = Request.Headers.TryGetValue("Id", out Microsoft.Extensions.Primitives.StringValues SenderUserId);
+            if (!userIdTaken)
+            {
+                logger.Error($"Sender account couldn't identify.");
+                return BadRequest(new BadRequestResponse("Unable to process Request. Please contact to Admin."));
+            }
+
+            AccountDTO[] account;
+            try
+            {
+                var senderAccount = accountRepository.GetById(SenderUserId.ToString());
+                account = senderAccount.ChattedUsers.Select(x => accountRepository.GetFirstOrDefault(a => a.UserName == x.UserName).AsDTO()).ToArray();
+            }
+            catch (Exception ex)
+            {
+                logger.Error($"Couldn't find opponents.({ex.Message})", ex);
+                return BadRequest(new BadRequestResponse("Couldn't find opponents."));
+            }
+
+            return Ok(account);
+        }
+
 
     }
 

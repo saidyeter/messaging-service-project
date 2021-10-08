@@ -11,7 +11,7 @@ const WebSocket = require('ws')
 const jwt = require("jsonwebtoken");
 
 const redis = require("redis");
-const client = redis.createClient({
+const redisClient = redis.createClient({
     host: REDIS_SERVER_HOST,
     port: REDIS_SERVER_PORT
 });
@@ -47,11 +47,11 @@ wss.on('connection', function (socket) {
 })
 
 
-client.on("error", error => {
+redisClient.on("error", error => {
     console.error(error);
 });
 
-client.on('message', (channel, messageFromRedisChannel) => {
+redisClient.on('message', (channel, messageFromRedisChannel) => {
     console.log(`'${messageFromRedisChannel}' from '${channel}' channel`);
     const messageDataFromRedisChannel = JSON.parse(messageFromRedisChannel)
 
@@ -67,7 +67,7 @@ client.on('message', (channel, messageFromRedisChannel) => {
         console.log(`${messageDataFromRedisChannel.receiverUser} couldnt found in wss clients`);
     }
 })
-client.subscribe(REDIS_CHANNEL)
+redisClient.subscribe(REDIS_CHANNEL)
 
 
 function parseToken(token) {

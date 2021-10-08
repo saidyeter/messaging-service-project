@@ -57,6 +57,48 @@ namespace MessagingService.DataAccess.Repositories
 
             Update(user);
         }
+
+        public void UpdateLastMessage(string userA, string userB)
+        {
+            var aUser = GetFirstOrDefault(x => x.UserName == userA);
+            if (aUser.ChattedUsers is null)
+            {
+                aUser.ChattedUsers = new System.Collections.Generic.List<ChattedUser>();
+            }
+
+            if (aUser.ChattedUsers.Any(x => x.UserName == userB))
+            {
+                aUser.ChattedUsers.First(x => x.UserName == userB).LastMessaged = System.DateTime.UtcNow;
+            }
+            else
+            {
+                aUser.ChattedUsers.Add(new ChattedUser
+                {
+                    UserName= userB,
+                    LastMessaged = System.DateTime.UtcNow
+                });
+            }
+            Update(aUser);
+
+            var bUser = GetFirstOrDefault(x => x.UserName == userB);
+            if (bUser.ChattedUsers is null)
+            {
+                bUser.ChattedUsers = new System.Collections.Generic.List<ChattedUser>();
+            }
+            if (bUser.ChattedUsers.Any(x => x.UserName == userA))
+            {
+                bUser.ChattedUsers.First(x => x.UserName == userA).LastMessaged = System.DateTime.UtcNow;
+            }
+            else
+            {
+                bUser.ChattedUsers.Add(new ChattedUser
+                {
+                    UserName = userA,
+                    LastMessaged = System.DateTime.UtcNow
+                });
+            }
+            Update(bUser);
+        }
     }
 
 }
