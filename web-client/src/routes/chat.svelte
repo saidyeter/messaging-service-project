@@ -1,9 +1,11 @@
 <script>
     import { fade, fly, blur } from "svelte/transition";
+    import { getNotificationsContext } from "svelte-notifications";
     import {
         apiGetLastMessageId,
         apiGetOlderMessagesFrom,
         apiGetSingleMessage,
+        apiSendMessage,
     } from "../../scripts/api-helper";
     let username = "";
     let shown = false;
@@ -11,15 +13,27 @@
         //console.log("fetching data user :", un);
         username = un;
         shown = true;
+        $messageList = [];
         initial();
     }
 
+    export async function onNewMessage(data) {
+        if (data.sender == username) {
+            const msg = await apiGetSingleMessage($authStore, data.messageId);
+            //console.log("yeni mesaj geldi",data,msg);
+            $messageList = [...$messageList, msg];
+        }
+    }
     //
 
     async function initial() {
         const latestMessage = await apiGetLastMessageId($authStore, username);
         //console.log("latest ok");
         const moreMessages = await more(latestMessage.messageId);
+        moreMessages.messageIdList = [
+            latestMessage.messageId,
+            ...moreMessages.messageIdList,
+        ];
         //console.log("more ok", moreMessages);
         const messages = await Promise.all(
             moreMessages.messageIdList
@@ -38,8 +52,9 @@
         return apiGetOlderMessagesFrom($authStore, messageId);
     }
 
+    const { addNotification } = getNotificationsContext();
     import { createEventDispatcher, onMount } from "svelte";
-    import { authStore, messageList } from "../store";
+    import { authStore, messageList,currentUser } from "../store";
 
     const dispatch = createEventDispatcher();
 
@@ -50,16 +65,27 @@
 
     let newmessage;
 
-    function sendMessage(event) {
-        $messageList = [
-            ...$messageList,
-            {
-                receiverUser: "user1",
-                senderUser: "said",
-                message: newmessage,
-            },
-        ];
-        newmessage = "";
+    async function sendMessage(event) {
+        try {
+            await apiSendMessage($authStore, username, newmessage);
+
+            $messageList = [
+                ...$messageList,
+                {
+                    receiverUser: username,
+                    senderUser: $currentUser,
+                    message: newmessage,
+                },
+            ];
+            newmessage = "";
+        } catch (error) {
+            addNotification({
+                text: "message couldnt send : " + error,
+                type: "danger",
+                position: "top-right",
+                removeAfter: 2000,
+            });
+        }
     }
 
     //initial
@@ -82,7 +108,10 @@
                         <div class="msg-item">
                             {#if msg.senderUser == username}
                                 <div class="received">
-                                    {msg.senderUser} : {msg.message}
+                                    <div class="sender">
+                                        {msg.senderUser}
+                                    </div>
+                                    {msg.message}
                                 </div>
                             {:else}
                                 <div class="sended">
@@ -109,13 +138,13 @@
     .chat-box-wrapper {
         background-color: rgb(0 0 0 / 10%);
         text-align: center;
-        
-        max-width: 240px;
+
+        max-width: 320px;
         margin: 0 auto;
         height: 100vh;
     }
-    .chat-messages{
-        overflow-y:auto; 
+    .chat-messages {
+        overflow-y: auto;
         height: 70vh;
         padding: 1em;
     }
@@ -125,15 +154,13 @@
         justify-content: space-between;
         height: 5vh;
         padding: 1em;
-
     }
     .chat-send-message {
         height: 5vh;
         display: flex;
         padding: 1em;
-
     }
-    input{
+    input {
         width: 100%;
     }
     .sended {
@@ -156,5 +183,8 @@
         list-style: none;
         padding-left: 0;
         bottom: 0;
+    }
+    .sender {
+        font-size: 0.5rem;
     }
 </style>

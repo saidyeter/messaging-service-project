@@ -75,6 +75,19 @@ namespace MessagingService.DataAccess.Repositories
             }
             return message;
         }
+
+        public void SetSeen(string id)
+        {
+            var message = GetById(id);
+
+            if (message is null)
+            {
+                return;
+            }
+            message.SeenAt = DateTime.UtcNow;
+
+            Update(message);
+        }
     }
 
 }

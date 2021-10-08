@@ -6,7 +6,7 @@ const persistStore = (key, initial) => {
     //if sub is broken, sets value to current local storage value
     const store = writable(data, () => {
         const unsubscribe = store.subscribe(value => {
-            setCookie(key, JSON.stringify(value),15)
+            setCookie(key, JSON.stringify(value), 30)
         })
         return unsubscribe
     })
@@ -14,6 +14,9 @@ const persistStore = (key, initial) => {
 }
 
 function setCookie(name, value, minutes) {
+    // if (getCookie(name).length > 0) {
+    //     return
+    // }
     var expires;
     if (minutes) {
         var date = new Date();
@@ -43,3 +46,5 @@ function getCookie(c_name) {
 
 export const authStore = persistStore('accessToken', "")
 export const messageList = writable([])
+export const opponentList = writable([])
+export const currentUser = writable("")
