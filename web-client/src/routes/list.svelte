@@ -7,37 +7,55 @@
     import { apiGetOpponents } from "../../scripts/api-helper";
     import Chat from "./chat.svelte";
     let chatbox;
-    let opponenUserName = ""
+    let opponenUserName = "";
     onMount(() => {
         initial();
-        connect($authStore,onNewMessage)
+        connect($authStore, onNewMessage, reConnect);
     });
+
+    function reConnect() {
+        if ($authStore) {
+            connect($authStore, onNewMessage, reConnect);
+        }
+    }
+
+    function redirectToLogin() {
+        authStore.set("");
+    }
     async function initial() {
         const opponents = await apiGetOpponents($authStore);
         $opponentList = [...opponents];
     }
     async function onNewMessage(msg) {
-        console.log(`new message :`,msg.data);
-        if (opponenUserName == "") {
-            //bildirim çıkar 
-            //göndericiyi listede başa çıkart
+        //console.log(`new message :`, msg.data);
+        if (msg.data.includes("invalid token")) {
+            redirectToLogin();
         }
-        else{
+        if (opponenUserName == "") {
+            //bildirim çıkar
+            //göndericiyi listede başa çıkart
+        } else {
             chatbox.onNewMessage(JSON.parse(msg.data));
         }
-    } 
+    }
 
     let shown = true;
 
     function goChat(event) {
         //console.log(event.target);
-        opponenUserName = event.target.id
-        chatbox.startFetching(opponenUserName);
-        shown = false;
+        opponenUserName = event.target.id;
+        if (opponenUserName) {
+            chatbox.startFetching(opponenUserName);
+            shown = false;
+        }
+        else{
+            console.log(event.target);
+        }
+        //setTimeout(goChat,10000)
     }
     function goList(event) {
         shown = true;
-        opponenUserName= ""
+        opponenUserName = "";
     }
 </script>
 
@@ -46,7 +64,7 @@
         {#each $opponentList as contact}
             <div class="contact-item" id={contact.userName} on:click={goChat}>
                 {contact.displayName}
-                <div class="last-message">
+                <div class="last-message" id={contact.userName}>
                     {contact.lastLogin}
                 </div>
             </div>

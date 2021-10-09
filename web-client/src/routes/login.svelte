@@ -39,7 +39,7 @@
         }
         try {
             var res = await apiLogin(username, password);
-            console.log("api result : ", JSON.stringify(res, null, 2));
+            //console.log("api result : ", JSON.stringify(res, null, 2));
             authStore.set(res.accessToken);
             currentUser.set(username)
             dispatch("successfulLogin");

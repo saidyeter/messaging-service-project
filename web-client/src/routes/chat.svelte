@@ -22,6 +22,13 @@
             const msg = await apiGetSingleMessage($authStore, data.messageId);
             //console.log("yeni mesaj geldi",data,msg);
             $messageList = [...$messageList, msg];
+            scrollSync()
+        } else {
+            addNotification({
+                text: "new message from " + data.sender,
+                position: "top-right",
+                removeAfter: 2000,
+            });
         }
     }
     //
@@ -46,6 +53,7 @@
         );
 
         $messageList = [...messages];
+        scrollSync()
     }
 
     function more(messageId) {
@@ -54,7 +62,7 @@
 
     const { addNotification } = getNotificationsContext();
     import { createEventDispatcher, onMount } from "svelte";
-    import { authStore, messageList,currentUser } from "../store";
+    import { authStore, messageList, currentUser } from "../store";
 
     const dispatch = createEventDispatcher();
 
@@ -66,18 +74,17 @@
     let newmessage;
 
     async function sendMessage(event) {
+        const msg = {
+            receiverUser: username,
+            senderUser: $currentUser,
+            message: newmessage,
+        };
         try {
             await apiSendMessage($authStore, username, newmessage);
 
-            $messageList = [
-                ...$messageList,
-                {
-                    receiverUser: username,
-                    senderUser: $currentUser,
-                    message: newmessage,
-                },
-            ];
+            $messageList = [...$messageList, msg];
             newmessage = "";
+            scrollSync()
         } catch (error) {
             addNotification({
                 text: "message couldnt send : " + error,
@@ -88,10 +95,14 @@
         }
     }
 
-    //initial
+    function scrollSync() {
+        var elem = document.getElementById("msglist");
+        if (elem) {
+            elem.scrollTop = elem.scrollHeight;
+        }
+    }
+
     //scroll up
-    //send
-    //ilerde socket ile
 </script>
 
 {#if shown}
@@ -101,7 +112,7 @@
             <div class="opponent">{username}</div>
         </div>
 
-        <div class="chat-messages">
+        <div class="chat-messages" id="msglist">
             <ul>
                 {#each $messageList as msg}
                     <li>
@@ -137,28 +148,30 @@
 <style>
     .chat-box-wrapper {
         background-color: rgb(0 0 0 / 10%);
-        text-align: center;
-
-        max-width: 320px;
+        display: flex;
+        flex-direction: column;
         margin: 0 auto;
-        height: 100vh;
+        width: 20em;
+        height: 95vh;
     }
     .chat-messages {
-        overflow-y: auto;
-        height: 70vh;
         padding: 1em;
+        overflow-y: auto;
+        flex-grow: 1;
     }
     .chat-header {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        height: 5vh;
         padding: 1em;
+        flex-basis: 2em;
+        flex-shrink: 0;
     }
     .chat-send-message {
-        height: 5vh;
-        display: flex;
         padding: 1em;
+        flex-basis: 1em;
+        flex-shrink: 0;
+        display: flex;
     }
     input {
         width: 100%;
@@ -178,6 +191,13 @@
     }
     li + li {
         margin-top: 0.5em;
+    }
+    li:not(:last-child):after {
+        content: "";
+        display: block;
+        margin: 0 auto;
+        border-bottom: 1px dotted black;
+        width: 95%;
     }
     ul {
         list-style: none;
