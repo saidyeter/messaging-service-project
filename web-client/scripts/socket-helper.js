@@ -5,7 +5,7 @@ const socketUrl = "ws://localhost:4000/ws"
 const serverAddress = socketUrl;
 
 
-export function connect(accessToken,onNewMessage) {
+export function connect(accessToken,onNewMessage,onConnectionClose) {
     const ws = new WebSocket(serverAddress);
 
     ws.addEventListener('open', function () {
@@ -13,9 +13,10 @@ export function connect(accessToken,onNewMessage) {
     });
 
     ws.addEventListener('message', function (msg) {
-        // if (msg.includes('invalid token')) {
-        //     throw new Exception('Couldnt connect')
-        // }
         onNewMessage(msg)
+    });
+    
+    ws.addEventListener('close', function (msg) {
+        onConnectionClose()
     });
 }
