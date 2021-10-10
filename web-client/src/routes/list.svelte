@@ -9,7 +9,7 @@
     let chatbox;
     let opponenUserName = "";
     onMount(() => {
-        initial();
+        getOpponents();
         connect($authStore, onNewMessage, reConnect);
     });
 
@@ -22,21 +22,24 @@
     function redirectToLogin() {
         authStore.set("");
     }
-    async function initial() {
+    async function getOpponents() {
         const opponents = await apiGetOpponents($authStore);
-        $opponentList = [...opponents];
+        $opponentList = [
+            ...opponents.sort((a, b) =>
+                a.lastMessaged > b.lastMessaged ? -1 : 1
+            ),
+        ];
     }
     async function onNewMessage(msg) {
         //console.log(`new message :`, msg.data);
         if (msg.data.includes("invalid token")) {
             redirectToLogin();
         }
-        if (opponenUserName == "") {
-            //bildirim çıkar
-            //göndericiyi listede başa çıkart
-        } else {
+
+        if (!shown) {
             chatbox.onNewMessage(JSON.parse(msg.data));
         }
+        getOpponents();
     }
 
     let shown = true;
@@ -47,8 +50,7 @@
         if (opponenUserName) {
             chatbox.startFetching(opponenUserName);
             shown = false;
-        }
-        else{
+        } else {
             console.log(event.target);
         }
         //setTimeout(goChat,10000)
@@ -63,9 +65,9 @@
     <div class="contact-list" trasition:fly>
         {#each $opponentList as contact}
             <div class="contact-item" id={contact.userName} on:click={goChat}>
-                {contact.displayName}
+                {contact.displayName} : {contact.messageSummary}
                 <div class="last-message" id={contact.userName}>
-                    {contact.lastLogin}
+                    {contact.userName} Last Messaged : {contact.lastMessaged}
                 </div>
             </div>
         {/each}

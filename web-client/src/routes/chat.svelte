@@ -7,6 +7,9 @@
         apiGetSingleMessage,
         apiSendMessage,
     } from "../../scripts/api-helper";
+
+	import MsgItem from "../components/msg-item.svelte";
+
     let username = "";
     let shown = false;
     export function startFetching(un) {
@@ -97,8 +100,8 @@
 
     function scrollSync() {
         var elem = document.getElementById("msglist");
-        if (elem) {
-            elem.scrollTop = elem.scrollHeight;
+        if (elem) {           
+            elem.scroll(0,elem.scrollHeight)
         }
     }
 
@@ -116,31 +119,14 @@
             <ul>
                 {#each $messageList as msg}
                     <li>
-                        <div class="msg-item">
-                            {#if msg.senderUser == username}
-                                <div class="received">
-                                    <div class="sender">
-                                        {msg.senderUser}
-                                    </div>
-                                    {msg.message}
-                                </div>
-                            {:else}
-                                <div class="sended">
-                                    {msg.message}
-                                </div>
-                            {/if}
-                        </div>
+                        <MsgItem messageData={msg}/>                      
                     </li>
                 {/each}
             </ul>
         </div>
         <div class="chat-send-message">
-            <div class="input">
-                <input type="text" bind:value={newmessage} />
-            </div>
-            <div class="submit">
-                <button on:click={sendMessage}>send</button>
-            </div>
+            <input type="text" bind:value={newmessage} />
+            <button on:click={sendMessage}>send</button>
         </div>
     </div>
 {/if}
@@ -173,15 +159,7 @@
         flex-shrink: 0;
         display: flex;
     }
-    input {
-        width: 100%;
-    }
-    .sended {
-        text-align: right;
-    }
-    .received {
-        text-align: left;
-    }
+   
     .back {
         cursor: pointer;
         color: white;
@@ -189,22 +167,12 @@
     .opponent {
         color: white;
     }
-    li + li {
-        margin-top: 0.5em;
-    }
-    li:not(:last-child):after {
-        content: "";
-        display: block;
-        margin: 0 auto;
-        border-bottom: 1px dotted black;
-        width: 95%;
-    }
     ul {
         list-style: none;
         padding-left: 0;
         bottom: 0;
     }
-    .sender {
-        font-size: 0.5rem;
+    button{
+        width: 5em;
     }
 </style>

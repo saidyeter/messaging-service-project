@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store'
 
-const persistStore = (key, initial) => {
+const cookieStore = (key, initial) => {
     const persist = getCookie(key)
     const data = persist ? JSON.parse(persist) : initial
     //if sub is broken, sets value to current local storage value
@@ -12,6 +12,18 @@ const persistStore = (key, initial) => {
     })
     return store
 }
+const localStorageStore = (key, initial) => {
+    const persist = localStorage.getItem(key)
+    const data = persist ? JSON.parse(persist) : initial
+    //if sub is broken, sets value to current local storage value
+    const store = writable(data, () => {
+      const unsubscribe = store.subscribe(value => {
+        localStorage.setItem(key, JSON.stringify(value))
+      })
+      return unsubscribe
+    })
+    return store
+  } 
 
 function setCookie(name, value, minutes) {
     // if (getCookie(name).length > 0) {
@@ -44,7 +56,7 @@ function getCookie(c_name) {
     return "";
 }
 
-export const authStore = persistStore('accessToken', "")
+export const authStore = cookieStore('accessToken', "")
 export const messageList = writable([])
 export const opponentList = writable([])
-export const currentUser = writable("")
+export const currentUser = localStorageStore("account","")
