@@ -58,9 +58,11 @@ namespace MessagingService.DataAccess.Repositories
             Update(user);
         }
 
-        public void UpdateLastMessage(string userA, string userB)
+        public void UpdateLastMessage(string userA, string userB,string messageSummary)
         {
             var aUser = GetFirstOrDefault(x => x.UserName == userA);
+            var bUser = GetFirstOrDefault(x => x.UserName == userB);
+
             if (aUser.ChattedUsers is null)
             {
                 aUser.ChattedUsers = new System.Collections.Generic.List<ChattedUser>();
@@ -69,18 +71,20 @@ namespace MessagingService.DataAccess.Repositories
             if (aUser.ChattedUsers.Any(x => x.UserName == userB))
             {
                 aUser.ChattedUsers.First(x => x.UserName == userB).LastMessaged = System.DateTime.UtcNow;
+                aUser.ChattedUsers.First(x => x.UserName == userB).MessageSummary = messageSummary;
             }
             else
             {
                 aUser.ChattedUsers.Add(new ChattedUser
                 {
                     UserName= userB,
-                    LastMessaged = System.DateTime.UtcNow
+                    LastMessaged = System.DateTime.UtcNow,
+                    DisplayName  = bUser.DisplayName,
+                    MessageSummary = messageSummary
                 });
             }
             Update(aUser);
 
-            var bUser = GetFirstOrDefault(x => x.UserName == userB);
             if (bUser.ChattedUsers is null)
             {
                 bUser.ChattedUsers = new System.Collections.Generic.List<ChattedUser>();
@@ -88,13 +92,16 @@ namespace MessagingService.DataAccess.Repositories
             if (bUser.ChattedUsers.Any(x => x.UserName == userA))
             {
                 bUser.ChattedUsers.First(x => x.UserName == userA).LastMessaged = System.DateTime.UtcNow;
+                bUser.ChattedUsers.First(x => x.UserName == userA).MessageSummary = messageSummary;
             }
             else
             {
                 bUser.ChattedUsers.Add(new ChattedUser
                 {
                     UserName = userA,
-                    LastMessaged = System.DateTime.UtcNow
+                    LastMessaged = System.DateTime.UtcNow,
+                    DisplayName  = aUser.DisplayName,
+                    MessageSummary = messageSummary
                 });
             }
             Update(bUser);

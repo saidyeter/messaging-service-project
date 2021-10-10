@@ -80,7 +80,7 @@ namespace MessagingService.DataAccess.Repositories
         {
             var message = GetById(id);
 
-            if (message is null)
+            if (message is null || message.SeenAt != null)
             {
                 return;
             }
