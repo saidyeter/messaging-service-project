@@ -9,6 +9,6 @@ namespace MessagingService.DataAccess.Model
         public string ReceiverUser { get; set; }
         public string Message { get; set; }
         public DateTime SendedAt { get; set; }
-        public DateTime SeenAt { get; set; }
+        public DateTime? SeenAt { get; set; }
     }
 }

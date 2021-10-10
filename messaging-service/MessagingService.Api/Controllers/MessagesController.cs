@@ -77,9 +77,11 @@ namespace MessagingService.Api.Controllers
                 {
                     Message = request.Message,
                     ReceiverUser = request.ReceiverUser,
-                    SenderUser = SenderUserName.ToString()
+                    SenderUser = SenderUserName.ToString(),
+                    SendedAt = System.DateTime.UtcNow,
+
                 });
-                accountRepository.UpdateLastMessage(SenderUserName.ToString(), request.ReceiverUser);
+                accountRepository.UpdateLastMessage(createResult.SenderUser, createResult.ReceiverUser,createResult.Message);
                 
                 var channel = "ch";
                 messagePublisher.PublishMessage(channel, createResult.Id.ToString(), createResult.SenderUser, createResult.ReceiverUser);
@@ -117,6 +119,9 @@ namespace MessagingService.Api.Controllers
             try
             {
                 message = messageRepository.GetSingleMessage(messageId, SenderUserName.ToString()).AsDTO();
+                if(message.ReceiverUser == SenderUserName.ToString()){
+                    messageRepository.SetSeen(messageId);
+                }                    
             }
             catch (Exception ex)
             {
@@ -236,7 +241,7 @@ namespace MessagingService.Api.Controllers
         /// <param name="opponent"> user messaging with </param>
         /// <returns> latest message id </returns>
         [HttpGet("GetOpponents")]
-        [ProducesResponseType(typeof(AccountDTO[]), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ChattedUser[]), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(BadRequestResponse), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public IActionResult GetOpponents()
@@ -248,11 +253,11 @@ namespace MessagingService.Api.Controllers
                 return BadRequest(new BadRequestResponse("Unable to process Request. Please contact to Admin."));
             }
 
-            AccountDTO[] account;
+            ChattedUser[] account;
             try
             {
                 var senderAccount = accountRepository.GetById(SenderUserId.ToString());
-                account = senderAccount.ChattedUsers.Select(x => accountRepository.GetFirstOrDefault(a => a.UserName == x.UserName).AsDTO()).ToArray();
+                account = senderAccount.ChattedUsers.ToArray();
             }
             catch (Exception ex)
             {
@@ -264,6 +269,28 @@ namespace MessagingService.Api.Controllers
         }
 
 
+        /// <summary> retrieves latest message between signed in user and opponent user for start point </summary>
+        /// <param name="opponent"> user messaging with </param>
+        /// <returns> latest message id </returns>
+        [HttpGet("GetUserInfo/{opponent}")]
+        [ProducesResponseType(typeof(AccountDTO), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(BadRequestResponse), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+        public IActionResult GetUserInfo(string opponent)
+        {
+            AccountDTO account;
+            try
+            {
+                account= accountRepository.GetFirstOrDefault(x=> x.UserName == opponent).AsDTO();
+            }
+            catch (Exception ex)
+            {
+                logger.Error($"Couldn't find account.({ex.Message})", ex);
+                return BadRequest(new BadRequestResponse("Couldn't find account."));
+            }
+
+            return Ok(account);
+        }
     }
 
 }

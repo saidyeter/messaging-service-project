@@ -31,7 +31,7 @@ namespace MessagingService.Api.Helpers
                 SenderUser = messageEntity.SenderUser,
                 ReceiverUser = messageEntity.ReceiverUser,
                 SeenAt = messageEntity.SeenAt,
-                SendedAt = messageEntity.SeenAt,
+                SendedAt = messageEntity.SendedAt,
             };
         }
         public static AccountDTO AsDTO(this DataAccess.Model.AccountModel accountEntity)
@@ -42,6 +42,7 @@ namespace MessagingService.Api.Helpers
                 EMail = accountEntity.EMail,
                 LastLogin = accountEntity.LastLogin,
                 UserName = accountEntity.UserName,
+                
             };
         }
 

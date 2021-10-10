@@ -8,7 +8,7 @@ namespace MessagingService.DataAccess.Repositories
         void BlockUser(string userId, string opponent);
         void UpdateLastLogin(string userId);
         bool IsBlocked(string userId, string opponent);
-        void UpdateLastMessage(string userId, string opponent);
+        void UpdateLastMessage(string userA, string userB,string messageSummary);
     }
 
 }

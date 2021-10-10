@@ -9,6 +9,7 @@ namespace MessagingService.DataAccess.Model
         public string UserName { get; set; }
         public string EMail { get; set; }
         public System.DateTime LastLogin { get; set; }
+        public System.DateTime LastActivity { get; set; }
         public string PasswordHash { get; set; }
         public string PasswordSalt { get; set; }
         public System.Collections.Generic.List<string> BlockedUsers { get; set; }
@@ -19,5 +20,7 @@ namespace MessagingService.DataAccess.Model
     {
         public DateTime LastMessaged { get; set; }
         public string UserName { get; set; }
+        public string DisplayName { get; set; }
+        public string MessageSummary { get; set; }
     }
 }
