@@ -1,6 +1,7 @@
 <script>
     import { fade, fly, blur } from "svelte/transition";
     import { getNotificationsContext } from "svelte-notifications";
+    const { addNotification } = getNotificationsContext();
     import {
         apiGetLastMessageId,
         apiGetOlderMessagesFrom,
@@ -8,10 +9,19 @@
         apiSendMessage,
     } from "../../scripts/api-helper";
 
+
+    import { createEventDispatcher, onMount } from "svelte";
+    import { authStore, messageList, currentUser } from "../store";
+
+    const dispatch = createEventDispatcher();
+
 	import MsgItem from "../components/msg-item.svelte";
 
     let username = "";
     let shown = false;
+
+    let newmessage;
+
     export function startFetching(un) {
         //console.log("fetching data user :", un);
         username = un;
@@ -63,18 +73,11 @@
         return apiGetOlderMessagesFrom($authStore, messageId);
     }
 
-    const { addNotification } = getNotificationsContext();
-    import { createEventDispatcher, onMount } from "svelte";
-    import { authStore, messageList, currentUser } from "../store";
-
-    const dispatch = createEventDispatcher();
-
     function goList() {
         dispatch("goList");
         shown = false;
     }
 
-    let newmessage;
 
     async function sendMessage(event) {
         const msg = {

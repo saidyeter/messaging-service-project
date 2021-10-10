@@ -32,6 +32,10 @@ export function apiGetLastMessageId(accessToken, opponent) {
     return apiGetWithAuth(path, accessToken)
 }
 
+export function apiGetUserInfo(accessToken, opponent) {
+    const path = `/Messages/GetUserInfo/${opponent}`
+    return apiGetWithAuth(path, accessToken)
+}
 
 export function apiGetOlderMessagesFrom(accessToken, messageId) {
     const path = `/Messages/GetOlderMessagesFrom/${messageId}`
@@ -43,34 +47,58 @@ export function apiGetSingleMessage(accessToken, messageId) {
     return apiGetWithAuth(path, accessToken)
 }
 
-export function apiSendMessage(accessToken,receiverUser, message) {
-
+export function apiSendMessage(accessToken, receiverUser, message) {
     const path = "/messages/SendMessage"
     const data = {
         receiverUser,
         message
     }
-    return apiPostWithAuth(path,accessToken, data)
+    return apiPostWithAuth(path, accessToken, data)
 }
 
-async function callApi(path, data, verb) {
-    const resource = apiUrl + path
-    var response = await fetch(resource, {
-        method: verb, // *GET, POST, PUT, DELETE, etc.
-        // mode: 'cors', // no-cors, *cors, same-origin
-        // cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-        // credentials: 'same-origin', // include, *same-origin, omit
-        headers: {
+async function apiPost(path, data) {
+    return postBase(
+        path,
+        JSON.stringify(data),
+        {
             'Content-Type': 'application/json'
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        // redirect: 'follow', // manual, *follow, error
-        // referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-        body: JSON.stringify(data)
+        })
+}
+
+
+
+
+async function apiGetWithAuth(path, accessToken) {
+    return getBase(
+        path,
+        {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken,
+        })
+}
+
+async function apiPostWithAuth(path, accessToken, data) {
+    return postBase(
+        path,
+        JSON.stringify(data),
+        {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken,
+        })
+}
+
+
+async function getBase(path, headers) {
+    const resource = apiUrl + path
+    const response = await fetch(resource, {
+        method: 'GET',
+        headers: headers
     })
-    var result = await response.json()
+    const result = await response.json()
     if (response.status == 200 || response.status == 201) {
         return result
+    } else if (response.status == 401) {
+        throw new Error("Unauthorized")
     } else {
         const err = JSON.stringify(result, null, 2)
         //console.error("Error on api: ", err);
@@ -78,71 +106,21 @@ async function callApi(path, data, verb) {
     }
 }
 
-
-
-
-
-async function apiPost(path, data) {
-    return callApi(path, data, 'POST')
-}
-
-
-
-async function apiGet(path) {
+async function postBase(path, body, headers) {
     const resource = apiUrl + path
-    var response = await fetch(resource, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-        }
-    })
-    var result = await response.json()
-    if (response.status == 200 || response.status == 201) {
-        return result
-    } else {
-        const err = JSON.stringify(result, null, 2)
-        console.error("Error on api: ", err);
-        throw new Error(result.error)
-    }
-}
-
-
-async function apiGetWithAuth(path, accessToken) {
-    const resource = apiUrl + path
-    var response = await fetch(resource, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + accessToken,
-        }
-    })
-    var result = await response.json()
-    if (response.status == 200 || response.status == 201) {
-        return result
-    } else {
-        const err = JSON.stringify(result, null, 2)
-        console.error("Error on api: ", err);
-        throw new Error(result.error)
-    }
-}
-
-async function apiPostWithAuth(path, accessToken, data) {
-    const resource = apiUrl + path
-    var response = await fetch(resource, {
+    const response = await fetch(resource, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + accessToken,
-        },
-        body:JSON.stringify(data)
+        headers: headers,
+        body: body
     })
-    var result = await response.json()
+    const result = await response.json()
     if (response.status == 200 || response.status == 201) {
         return result
+    } else if (response.status == 401) {
+        throw new Error("Unauthorized")
     } else {
         const err = JSON.stringify(result, null, 2)
-        console.error("Error on api: ", err);
+        //console.error("Error on api: ", err);
         throw new Error(result.error)
     }
 }
