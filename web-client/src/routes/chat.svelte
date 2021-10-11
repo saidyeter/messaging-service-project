@@ -7,7 +7,7 @@
         apiGetOlderMessagesFrom,
         apiGetSingleMessage,
         apiSendMessage,
-    } from "../../scripts/api-helper";
+    } from "../helper/api-helper.js";
 
 
     import { createEventDispatcher, onMount } from "svelte";

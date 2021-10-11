@@ -11,7 +11,7 @@
    */
     export let messageData;
     import { currentUser } from "../store";
-    import {relativeDate} from "../../scripts/date-helper"
+    import {relativeDate} from "../helper/date-helper"
 </script>
 
 <div class="msg-item">

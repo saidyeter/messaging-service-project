@@ -1,4 +1,4 @@
-const apiUrl = "http://localhost:4000"
+const apiUrl ="http://ms-nginx:4000"//"http://localhost:4000"
 
 export function apiLogin(username, password) {
 
