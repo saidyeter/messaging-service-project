@@ -1,5 +1,5 @@
 <script>
-    import { apiLogin } from "../../scripts/api-helper";
+    import { apiLogin } from "../helper/api-helper.js";
     import { authStore,currentUser } from "../store";
     import { Router, Link, Route } from "svelte-routing";
     import { getNotificationsContext } from "svelte-notifications";

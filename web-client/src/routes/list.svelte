@@ -4,9 +4,9 @@
 
     import { getNotificationsContext } from "svelte-notifications";
     const { addNotification } = getNotificationsContext();
-    import { connect } from "../../scripts/socket-helper";
+    import { connect } from "../helper/socket-helper.js";
     import { authStore, opponentList } from "../store";
-    import { apiGetOpponents, apiGetUserInfo } from "../../scripts/api-helper";
+    import { apiGetOpponents, apiGetUserInfo } from "../helper/api-helper.js";
     import Chat from "./chat.svelte";
     let chatbox;
     let opponenUserName = "";

@@ -1,5 +1,5 @@
 <script>
-    import { apiRegister } from "../../scripts/api-helper";
+    import { apiRegister } from "../helper/api-helper.js";
     import { Router, Link, Route } from "svelte-routing";
     let username = "";
     let password = "";
