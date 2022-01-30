@@ -30,11 +30,11 @@ The app can be run on Docker. Only requirement is Docker Compose.
 
 ## Rest API Usage
 
-Can be accessible from [here](/docs/rest-api).
+Can be accessible from [here](/docs/rest-api.md).
 
 ## Socket Server Usage 
 
-Can be accessible from [here](/docs/socket-server).
+Can be accessible from [here](/docs/socket-server.md).
 
 
 ## Authors
