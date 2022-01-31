@@ -1,21 +1,21 @@
 <script>
     import { fade, fly, blur } from "svelte/transition";
-    import { getNotificationsContext } from "svelte-notifications";
-    const { addNotification } = getNotificationsContext();
+  	import  { getNotificationsContext } from 'svelte-notifications';
+	const { addNotification } = getNotificationsContext();
     import {
         apiGetLastMessageId,
         apiGetOlderMessagesFrom,
         apiGetSingleMessage,
         apiSendMessage,
-    } from "../helper/api-helper.js";
+    } from "$lib/helper/api-helper.js";
 
 
     import { createEventDispatcher, onMount } from "svelte";
-    import { authStore, messageList, currentUser } from "../store";
+    import { messageList, currentUser } from "$lib/helper/store";
 
     const dispatch = createEventDispatcher();
 
-	import MsgItem from "../components/msg-item.svelte";
+	import MsgItem from "$lib/components/msg-item.svelte";
 
     let username = "";
     let shown = false;
@@ -23,7 +23,7 @@
     let newmessage;
 
     export function startFetching(un) {
-        //console.log("fetching data user :", un);
+        console.log("fetching data user :", un);
         username = un;
         shown = true;
         $messageList = [];
@@ -32,7 +32,7 @@
 
     export async function onNewMessage(data) {
         if (data.sender == username) {
-            const msg = await apiGetSingleMessage($authStore, data.messageId);
+            const msg = await apiGetSingleMessage(data.messageId);
             //console.log("yeni mesaj geldi",data,msg);
             $messageList = [...$messageList, msg];
             scrollSync()
@@ -47,8 +47,8 @@
     //
 
     async function initial() {
-        const latestMessage = await apiGetLastMessageId($authStore, username);
-        //console.log("latest ok");
+        const latestMessage = await apiGetLastMessageId(username);
+        console.log("latest ok");
         const moreMessages = await more(latestMessage.messageId);
         moreMessages.messageIdList = [
             latestMessage.messageId,
@@ -58,7 +58,7 @@
         const messages = await Promise.all(
             moreMessages.messageIdList
                 .map(async (x) => {
-                    const msg = await apiGetSingleMessage($authStore, x);
+                    const msg = await apiGetSingleMessage(x);
                     //console.log(msg);
                     return msg;
                 })
@@ -70,7 +70,7 @@
     }
 
     function more(messageId) {
-        return apiGetOlderMessagesFrom($authStore, messageId);
+        return apiGetOlderMessagesFrom(messageId);
     }
 
     function goList() {
@@ -85,8 +85,9 @@
             senderUser: $currentUser,
             message: newmessage,
         };
+
         try {
-            await apiSendMessage($authStore, username, newmessage);
+            await apiSendMessage(username, newmessage);
 
             $messageList = [...$messageList, msg];
             newmessage = "";

@@ -1,16 +1,30 @@
-const apiUrl ="http://ms-nginx:4000"//"http://localhost:4000"
+const apiUrl = "http://localhost:4000"//"http://localhost:4000"
 
-export function apiLogin(username, password) {
+const keyName = "accesstoken"
+function saveAccessToken(token) {
+    sessionStorage.setItem(keyName,token)
+}
+function getAccessToken() {
+    //console.log(sessionStorage.getItem(keyName));
+    return sessionStorage.getItem(keyName)
+}
 
+
+export async function apiLogin(username, password) {
     const path = "/auth/login"
     const data = {
         username,
         password
     }
-    return apiPost(path, data)
+    const res = await apiPost(path, data)
+    if (res.accessToken) {
+        saveAccessToken(res.accessToken)
+        return true
+    }
+    return false
 }
 
-export function apiRegister(displayname, email, username, password) {
+export async function apiRegister(displayname, email, username, password) {
 
     const path = "/auth/register"
     const data = {
@@ -19,41 +33,45 @@ export function apiRegister(displayname, email, username, password) {
         displayname,
         email
     }
-    return apiPost(path, data)
+    const res = await apiPost(path, data)
+    if (res.id) {
+        return true
+    }
+    return false
 }
 
-export function apiGetOpponents(accessToken) {
+export function apiGetOpponents() {
     const path = `/Messages/GetOpponents`
-    return apiGetWithAuth(path, accessToken)
+    return apiGetWithAuth(path)
 }
 
-export function apiGetLastMessageId(accessToken, opponent) {
+export function apiGetLastMessageId(opponent) {
     const path = `/Messages/GetLatestMessageBetween/${opponent}`
-    return apiGetWithAuth(path, accessToken)
+    return apiGetWithAuth(path)
 }
 
-export function apiGetUserInfo(accessToken, opponent) {
+export function apiGetUserInfo(opponent) {
     const path = `/Messages/GetUserInfo/${opponent}`
-    return apiGetWithAuth(path, accessToken)
+    return apiGetWithAuth(path)
 }
 
-export function apiGetOlderMessagesFrom(accessToken, messageId) {
+export function apiGetOlderMessagesFrom(messageId) {
     const path = `/Messages/GetOlderMessagesFrom/${messageId}`
-    return apiGetWithAuth(path, accessToken)
+    return apiGetWithAuth(path)
 }
 
-export function apiGetSingleMessage(accessToken, messageId) {
+export function apiGetSingleMessage(messageId) {
     const path = `/Messages/GetMessage/${messageId}`
-    return apiGetWithAuth(path, accessToken)
+    return apiGetWithAuth(path)
 }
 
-export function apiSendMessage(accessToken, receiverUser, message) {
+export function apiSendMessage(receiverUser, message) {
     const path = "/messages/SendMessage"
     const data = {
         receiverUser,
         message
     }
-    return apiPostWithAuth(path, accessToken, data)
+    return apiPostWithAuth(path, data)
 }
 
 async function apiPost(path, data) {
@@ -68,7 +86,11 @@ async function apiPost(path, data) {
 
 
 
-async function apiGetWithAuth(path, accessToken) {
+async function apiGetWithAuth(path) {
+    const accessToken = getAccessToken()
+    if (!accessToken) {
+        return null
+    }
     return getBase(
         path,
         {
@@ -77,7 +99,11 @@ async function apiGetWithAuth(path, accessToken) {
         })
 }
 
-async function apiPostWithAuth(path, accessToken, data) {
+async function apiPostWithAuth(path, data) {
+    const accessToken = getAccessToken()
+    if (!accessToken) {
+        return null
+    }
     return postBase(
         path,
         JSON.stringify(data),
@@ -88,7 +114,11 @@ async function apiPostWithAuth(path, accessToken, data) {
 }
 
 
+
+
+
 async function getBase(path, headers) {
+    // console.log('path',path);
     const resource = apiUrl + path
     const response = await fetch(resource, {
         method: 'GET',
