@@ -92,6 +92,6 @@ services:
   ms-client:
     build: ./web-client
     ports:
-      - 15000:5000
+      - 15000:3000
     depends_on:
       - ms-nginx
